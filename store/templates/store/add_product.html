@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>إضافة منتج</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark px-4">
+  <a class="navbar-brand" href="/">🛍️ متجري</a>
+  <a href="/seller/dashboard/" class="btn btn-outline-light btn-sm">لوحة التحكم</a>
+</nav>
+
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <div class="card p-4">
+        <h3 class="mb-4">➕ إضافة منتج جديد</h3>
+        <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">اسم المنتج</label>
+            <input type="text" name="title" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">وصف المنتج</label>
+            <textarea name="description" class="form-control" rows="3" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">السعر $</label>
+            <input type="number" name="price" step="0.01" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">الكمية في المخزون</label>
+            <input type="number" name="stock" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">الفئة</label>
+            <select name="category" class="form-control" required>
+              {% for category in categories %}
+              <option value="{{ category.pk }}">{{ category.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">صورة المنتج</label>
+            <input type="file" name="image" class="form-control">
+          </div>
+          <button type="submit" class="btn btn-success w-100">نشر المنتج 🚀</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

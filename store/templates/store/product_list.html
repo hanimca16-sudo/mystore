@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>متجري</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark px-4 d-flex justify-content-between">
+  <a class="navbar-brand" href="/">🛍️ متجري</a>
+  <div>
+    {% if user.is_authenticated %}
+      {% if user.seller %}
+        <a href="/seller/dashboard/" class="btn btn-warning btn-sm me-2">🏪 بيع منتج</a>
+        <a href="/inbox/" class="btn btn-info btn-sm me-2">📬 الرسائل</a>
+      {% else %}
+        <a href="/become-seller/" class="btn btn-success btn-sm me-2">افتح متجرك</a>
+      {% endif %}
+      <form method="POST" action="/accounts/logout/" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-light btn-sm me-2">خروج</button>
+      </form>
+    {% else %}
+      <a href="/register/" class="btn btn-success btn-sm me-2">إنشاء حساب</a>
+      <a href="/accounts/login/" class="btn btn-outline-light btn-sm me-2">دخول</a>
+    {% endif %}
+    <a href="/cart/" class="btn btn-outline-light btn-sm">🛒 السلة</a>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <form method="GET" class="mb-4">
+    <input name="search" class="form-control" placeholder="ابحث عن منتج..." value="{{ request.GET.search }}">
+  </form>
+
+  <div class="mb-3">
+    {% for category in categories %}
+      <a href="?category={{ category.name }}" class="btn btn-outline-secondary btn-sm me-1">{{ category.name }}</a>
+    {% endfor %}
+  </div>
+
+  <div class="row">
+    {% for product in products %}
+    <div class="col-md-3 mb-4">
+      <div class="card h-100">
+        {% if product.image %}
+          <img src="{{ product.image.url }}" class="card-img-top" style="height:200px; object-fit:cover;">
+        {% endif %}
+        <div class="card-body">
+          <h6 class="card-title">{{ product.title }}</h6>
+          <p class="text-muted small">{{ product.description|truncatewords:10 }}</p>
+          <p class="text-muted small">🏪 {{ product.seller.shop_name }}</p>
+          <p class="fw-bold text-success">{{ product.price }} DA</p>
+          <a href="/product/{{ product.pk }}/" class="btn btn-primary btn-sm w-100">عرض التفاصيل</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="text-center mt-5">
+      <h5>لا توجد منتجات بعد 😔</h5>
+      <a href="/become-seller/" class="btn btn-success mt-3">كن أول بائع 🚀</a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+</body>
+</html>

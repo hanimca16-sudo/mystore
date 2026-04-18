@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ product.title }}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark px-4 d-flex justify-content-between">
+  <a class="navbar-brand" href="/">🛍️ متجري</a>
+  <a href="/cart/" class="btn btn-outline-light btn-sm">🛒 السلة</a>
+</nav>
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-4">
+      {% if product.image %}
+        <img src="{{ product.image.url }}" class="img-fluid rounded">
+      {% endif %}
+    </div>
+    <div class="col-md-8">
+      <h2>{{ product.title }}</h2>
+      <p class="text-muted">{{ product.description }}</p>
+      <h4 class="text-success">{{ product.price }} DA</h4>
+      <p>المخزون: {{ product.stock }}</p>
+      <p>البائع: {{ product.seller.shop_name }}</p>
+      <a href="/add/{{ product.pk }}/" class="btn btn-primary">أضف للسلة 🛒</a>
+      <a href="/" class="btn btn-secondary">رجوع</a>
+
+      {% if user.is_authenticated %}
+      <hr>
+      <h5>📩 تواصل مع البائع</h5>
+      <form method="POST" action="/message/{{ product.pk }}/">
+        {% csrf_token %}
+        <div class="mb-3">
+          <textarea name="content" class="form-control" rows="3" placeholder="اكتب رسالتك هنا..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">إرسال الرسالة</button>
+      </form>
+      {% else %}
+      <hr>
+      <p class="text-muted">يجب <a href="/accounts/login/">تسجيل الدخول</a> للتواصل مع البائع</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

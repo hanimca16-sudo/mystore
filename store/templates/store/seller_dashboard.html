@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>لوحة البائع</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark px-4">
+  <a class="navbar-brand" href="/">🛍️ متجري</a>
+  <div>
+    <a href="/seller/add/" class="btn btn-success btn-sm me-2">+ إضافة منتج</a>
+    <form method="POST" action="/accounts/logout/" style="display:inline;">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-outline-light btn-sm">خروج</button>
+</form>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <h3 class="mb-4">🏪 {{ request.user.seller.shop_name }}</h3>
+
+  {% if products %}
+  <div class="row">
+    {% for product in products %}
+    <div class="col-md-3 mb-4">
+      <div class="card h-100">
+        {% if product.image %}
+          <img src="{{ product.image.url }}" class="card-img-top" style="height:200px; object-fit:cover;">
+        {% endif %}
+        <div class="card-body">
+          <h6 class="card-title">{{ product.title }}</h6>
+          <p class="text-success fw-bold">{{ product.price }} DA</p>
+         <p class="text-muted small">المخزون: {{ product.stock }}</p>
+          <a href="/seller/delete/{{ product.pk }}/" class="btn btn-danger btn-sm w-100 mt-1" onclick="return confirm('هل أنت متأكد من حذف المنتج؟')">🗑️ حذف</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center mt-5">
+    <h5>لا توجد منتجات بعد 😔</h5>
+    <a href="/seller/add/" class="btn btn-primary mt-3">أضف أول منتج</a>
+  </div>
+  {% endif %}
+</div>
+
+</body>
+</html>
