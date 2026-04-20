@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
-from .models import Product, Category, Order, OrderItem, Seller, Message
+from .models import Product, Category, Order, OrderItem, Seller, Message, Profile
 
 def product_list(request):
     products   = Product.objects.filter(stock__gt=0)
@@ -135,3 +135,49 @@ def send_message(request, pk):
 def inbox(request):
     messages = Message.objects.filter(receiver=request.user).order_by('-created_at')
     return render(request, 'store/inbox.html', {'messages': messages})
+
+@login_required
+def reply_message(request, pk):
+    original = get_object_or_404(Message, pk=pk)
+    if request.method == 'POST':
+        content = request.POST['content']
+        Message.objects.create(
+            sender=request.user,
+            receiver=original.sender,
+            product=original.product,
+            content=content
+        )
+        return redirect('inbox')
+    return redirect('inbox')
+
+@login_required
+def profile(request):
+    profile, created = Profile.objects.get_or_create(user=request.user)
+    error   = ''
+    success = ''
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'update_info':
+            profile.first_name = request.POST['first_name']
+            profile.last_name  = request.POST['last_name']
+            profile.phone      = request.POST['phone']
+            profile.save()
+            success = 'تم تحديث المعلومات بنجاح!'
+
+        elif action == 'change_password':
+            old_password = request.POST['old_password']
+            new_password = request.POST['new_password']
+            if request.user.check_password(old_password):
+                request.user.set_password(new_password)
+                request.user.save()
+                success = 'تم تغيير كلمة المرور بنجاح!'
+            else:
+                error = 'كلمة المرور القديمة خاطئة!'
+
+    return render(request, 'store/profile.html', {
+        'profile': profile,
+        'error':   error,
+        'success': success,
+    })

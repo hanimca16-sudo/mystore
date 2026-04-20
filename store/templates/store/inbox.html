@@ -27,6 +27,14 @@
       <p class="text-muted small">بخصوص: {{ message.product.title }}</p>
       {% endif %}
       <p class="card-text">{{ message.content }}</p>
+      <hr>
+      <form method="POST" action="/reply/{{ message.pk }}/">
+        {% csrf_token %}
+        <div class="input-group">
+          <input type="text" name="content" class="form-control" placeholder="اكتب ردك هنا...">
+          <button type="submit" class="btn btn-success">رد 📩</button>
+        </div>
+      </form>
     </div>
   </div>
   {% endfor %}

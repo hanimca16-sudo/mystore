@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>الملف الشخصي</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark px-4 d-flex justify-content-between">
+  <a class="navbar-brand" href="/">🛍️ متجري</a>
+  <a href="/" class="btn btn-outline-light btn-sm">رجوع</a>
+</nav>
+
+<div class="container mt-4">
+  <h3 class="mb-4">👤 الملف الشخصي</h3>
+
+  {% if error %}
+  <div class="alert alert-danger">{{ error }}</div>
+  {% endif %}
+  {% if success %}
+  <div class="alert alert-success">{{ success }}</div>
+  {% endif %}
+
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="card p-4">
+        <h5 class="mb-3">📝 المعلومات الشخصية</h5>
+        <form method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="update_info">
+          <div class="mb-3">
+            <label class="form-label">الاسم</label>
+            <input type="text" name="first_name" class="form-control" value="{{ profile.first_name }}">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">اللقب</label>
+            <input type="text" name="last_name" class="form-control" value="{{ profile.last_name }}">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">رقم الهاتف</label>
+            <input type="text" name="phone" class="form-control" value="{{ profile.phone }}">
+          </div>
+          <button type="submit" class="btn btn-primary w-100">حفظ المعلومات</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <div class="card p-4">
+        <h5 class="mb-3">🔒 تغيير كلمة المرور</h5>
+        <form method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="change_password">
+          <div class="mb-3">
+            <label class="form-label">كلمة المرور القديمة</label>
+            <input type="password" name="old_password" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">كلمة المرور الجديدة</label>
+            <input type="password" name="new_password" class="form-control" required>
+          </div>
+          <button type="submit" class="btn btn-warning w-100">تغيير كلمة المرور</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

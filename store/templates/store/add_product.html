@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-dark bg-dark px-4">
+<nav class="navbar navbar-dark bg-dark px-4 d-flex justify-content-between">
   <a class="navbar-brand" href="/">🛍️ متجري</a>
   <a href="/seller/dashboard/" class="btn btn-outline-light btn-sm">لوحة التحكم</a>
 </nav>
@@ -28,7 +28,7 @@
             <textarea name="description" class="form-control" rows="3" required></textarea>
           </div>
           <div class="mb-3">
-            <label class="form-label">السعر $</label>
+            <label class="form-label">السعر DA</label>
             <input type="number" name="price" step="0.01" class="form-control" required>
           </div>
           <div class="mb-3">
@@ -42,6 +42,27 @@
               <option value="{{ category.pk }}">{{ category.name }}</option>
               {% endfor %}
             </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">الشحن</label>
+            <select name="shipping" class="form-control">
+              <option value="">-- اختر --</option>
+              <option value="available">شحن متوفر</option>
+              <option value="local">شحن جزئي</option>
+              <option value="not_available">شحن غير متوفر</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">الولاية</label>
+            <input type="text" name="wilaya" class="form-control" placeholder="اختياري">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">رقم الهاتف</label>
+            <input type="text" name="phone" class="form-control" placeholder="اختياري">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">الموقع الإلكتروني</label>
+            <input type="url" name="website" class="form-control" placeholder="اختياري">
           </div>
           <div class="mb-3">
             <label class="form-label">صورة المنتج</label>

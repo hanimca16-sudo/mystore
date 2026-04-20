@@ -25,8 +25,28 @@
       <h4 class="text-success">{{ product.price }} DA</h4>
       <p>المخزون: {{ product.stock }}</p>
       <p>البائع: {{ product.seller.shop_name }}</p>
-      <a href="/add/{{ product.pk }}/" class="btn btn-primary">أضف للسلة 🛒</a>
-      <a href="/" class="btn btn-secondary">رجوع</a>
+      {% if product.shipping %}
+      <p>الشحن:
+        {% if product.shipping == 'available' %}
+          <span class="badge bg-success">شحن متوفر</span>
+        {% elif product.shipping == 'local' %}
+          <span class="badge bg-warning">شحن جزئي</span>
+        {% else %}
+          <span class="badge bg-danger">شحن غير متوفر</span>
+        {% endif %}
+      </p>
+      {% endif %}
+      {% if product.wilaya %}
+      <p>📍 الولاية: {{ product.wilaya }}</p>
+      {% endif %}
+      {% if product.phone %}
+      <p>📞 الهاتف: {{ product.phone }}</p>
+      {% endif %}
+      {% if product.website %}
+      <p>🌐 الموقع: <a href="{{ product.website }}" target="_blank">{{ product.website }}</a></p>
+      {% endif %}
+      <a href="/add/{{ product.pk }}/" class="btn btn-primary mt-2">أضف للسلة 🛒</a>
+      <a href="/" class="btn btn-secondary mt-2">رجوع</a>
 
       {% if user.is_authenticated %}
       <hr>
