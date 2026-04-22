@@ -4,63 +4,97 @@
   <meta charset="UTF-8">
   <title>{{ product.title }}</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Tajawal', sans-serif; }
+    body { background: #f5f5f5; }
+    .navbar { background: linear-gradient(135deg, #1a1a2e, #16213e) !important; padding: 15px 30px; }
+    .navbar-brand { font-size: 24px; font-weight: 900; color: #FFD700 !important; }
+    .product-img { border-radius: 20px; width: 100%; object-fit: cover; max-height: 400px; }
+    .product-card { background: white; border: none; border-radius: 20px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
+    .price-tag { font-size: 32px; font-weight: 900; color: #0f3460; }
+    .btn-cart { background: linear-gradient(135deg, #FFD700, #FFC200); color: #1a1a2e; border: none; border-radius: 12px; padding: 12px 0; width: 100%; font-size: 16px; font-weight: 900; }
+    .btn-cart:hover { background: linear-gradient(135deg, #0f3460, #16213e); color: white; }
+    .btn-back { background: white; color: #0f3460; border: 2px solid #0f3460; border-radius: 12px; padding: 12px 0; width: 100%; font-size: 16px; font-weight: 700; }
+    .info-badge { background: #f0f4ff; color: #0f3460; border-radius: 10px; padding: 8px 15px; font-size: 14px; display: inline-block; margin: 4px; }
+    .message-box { background: white; border: none; border-radius: 20px; padding: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); margin-top: 20px; }
+    .message-input { border-radius: 12px; padding: 12px; border: 2px solid #eee; font-size: 15px; }
+    .message-input:focus { border-color: #0f3460; box-shadow: none; }
+    .btn-send { background: linear-gradient(135deg, #0f3460, #16213e); color: white; border: none; border-radius: 12px; padding: 12px 0; width: 100%; font-size: 16px; font-weight: 700; }
+    .btn-send:hover { background: linear-gradient(135deg, #FFD700, #FFC200); color: #1a1a2e; }
+    .seller-info { background: #f0f4ff; border-radius: 15px; padding: 15px; margin-top: 15px; }
+  </style>
 </head>
 <body>
 
-<nav class="navbar navbar-dark bg-dark px-4 d-flex justify-content-between">
+<nav class="navbar navbar-dark px-4 d-flex justify-content-between">
   <a class="navbar-brand" href="/">🛍️ متجري</a>
-  <a href="/cart/" class="btn btn-outline-light btn-sm">🛒 السلة</a>
+  <a href="/cart/" class="btn btn-outline-warning btn-sm">🛒 السلة</a>
 </nav>
 
 <div class="container mt-4">
-  <div class="row">
-    <div class="col-md-4">
+  <div class="row g-4">
+    <div class="col-md-5">
       {% if product.image %}
-        <img src="{{ product.image.url }}" class="img-fluid rounded">
+        <img src="{{ product.image.url }}" class="product-img">
+      {% else %}
+        <div style="height:400px; background:#eee; border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:80px;">📦</div>
       {% endif %}
     </div>
-    <div class="col-md-8">
-      <h2>{{ product.title }}</h2>
-      <p class="text-muted">{{ product.description }}</p>
-      <h4 class="text-success">{{ product.price }} DA</h4>
-      <p>المخزون: {{ product.stock }}</p>
-      <p>البائع: {{ product.seller.shop_name }}</p>
-      {% if product.shipping %}
-      <p>الشحن:
-        {% if product.shipping == 'available' %}
-          <span class="badge bg-success">شحن متوفر</span>
-        {% elif product.shipping == 'local' %}
-          <span class="badge bg-warning">شحن جزئي</span>
-        {% else %}
-          <span class="badge bg-danger">شحن غير متوفر</span>
-        {% endif %}
-      </p>
-      {% endif %}
-      {% if product.wilaya %}
-      <p>📍 الولاية: {{ product.wilaya }}</p>
-      {% endif %}
-      {% if product.phone %}
-      <p>📞 الهاتف: {{ product.phone }}</p>
-      {% endif %}
-      {% if product.website %}
-      <p>🌐 الموقع: <a href="{{ product.website }}" target="_blank">{{ product.website }}</a></p>
-      {% endif %}
-      <a href="/add/{{ product.pk }}/" class="btn btn-primary mt-2">أضف للسلة 🛒</a>
-      <a href="/" class="btn btn-secondary mt-2">رجوع</a>
+    <div class="col-md-7">
+      <div class="product-card">
+        <h2 class="fw-bold mb-2">{{ product.title }}</h2>
+        <p class="text-muted mb-3">{{ product.description }}</p>
+        <div class="price-tag mb-3">{{ product.price }} DA</div>
+
+        <div class="mb-3">
+          {% if product.shipping == 'available' %}
+          <span class="badge bg-success p-2">✅ شحن متوفر</span>
+          {% elif product.shipping == 'local' %}
+          <span class="badge bg-warning p-2">📦 شحن جزئي</span>
+          {% elif product.shipping == 'not_available' %}
+          <span class="badge bg-danger p-2">❌ بدون شحن</span>
+          {% endif %}
+          <span class="info-badge">📦 المخزون: {{ product.stock }}</span>
+        </div>
+
+        <div class="seller-info">
+          <p class="fw-bold mb-1">🏪 {{ product.seller.shop_name }}</p>
+          {% if product.wilaya %}
+          <p class="mb-1">📍 {{ product.wilaya }}</p>
+          {% endif %}
+          {% if product.phone %}
+          <p class="mb-1">📞 {{ product.phone }}</p>
+          {% endif %}
+          {% if product.website %}
+          <p class="mb-0">🌐 <a href="{{ product.website }}" target="_blank">{{ product.website }}</a></p>
+          {% endif %}
+        </div>
+
+        <div class="row g-2 mt-3">
+          <div class="col-8">
+            <a href="/add/{{ product.pk }}/" class="btn btn-cart">🛒 أضف للسلة</a>
+          </div>
+          <div class="col-4">
+            <a href="/" class="btn btn-back">رجوع</a>
+          </div>
+        </div>
+      </div>
 
       {% if user.is_authenticated %}
-      <hr>
-      <h5>📩 تواصل مع البائع</h5>
-      <form method="POST" action="/message/{{ product.pk }}/">
-        {% csrf_token %}
-        <div class="mb-3">
-          <textarea name="content" class="form-control" rows="3" placeholder="اكتب رسالتك هنا..."></textarea>
-        </div>
-        <button type="submit" class="btn btn-success">إرسال الرسالة</button>
-      </form>
+      <div class="message-box">
+        <h5 class="fw-bold mb-3">📩 تواصل مع البائع</h5>
+        <form method="POST" action="/message/{{ product.pk }}/">
+          {% csrf_token %}
+          <textarea name="content" class="form-control message-input mb-3" rows="3" placeholder="اكتب رسالتك هنا..."></textarea>
+          <button type="submit" class="btn btn-send">إرسال الرسالة 📨</button>
+        </form>
+      </div>
       {% else %}
-      <hr>
-      <p class="text-muted">يجب <a href="/accounts/login/">تسجيل الدخول</a> للتواصل مع البائع</p>
+      <div class="message-box text-center">
+        <p class="text-muted mb-2">يجب تسجيل الدخول للتواصل مع البائع</p>
+        <a href="/accounts/login/" class="btn btn-warning px-4">تسجيل الدخول</a>
+      </div>
       {% endif %}
     </div>
   </div>

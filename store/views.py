@@ -104,6 +104,10 @@ def add_product(request):
             stock=request.POST['stock'],
             category=Category.objects.get(pk=request.POST['category']),
             image=request.FILES.get('image'),
+            shipping=request.POST.get('shipping', ''),
+            wilaya=request.POST.get('wilaya', ''),
+            phone=request.POST.get('phone', ''),
+            website=request.POST.get('website', ''),
         )
         return redirect('seller_dashboard')
     categories = Category.objects.all()
@@ -181,3 +185,9 @@ def profile(request):
         'error':   error,
         'success': success,
     })
+
+def about(request):
+    return render(request, 'store/about.html')
+
+def contact(request):
+    return render(request, 'store/contact.html')

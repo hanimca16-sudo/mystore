@@ -14,4 +14,5 @@ urlpatterns = [
     path('seller/delete/<int:pk>/', views.delete_product,  name='delete_product'),
     path('message/<int:pk>/',       views.send_message,    name='send_message'),
     path('inbox/',                  views.inbox,           name='inbox'),
-    path('profile/', views.profile, name='profile'),path('reply/<int:pk>/', views.reply_message, name='reply_message'),]
+    path('profile/', views.profile, name='profile'),path('reply/<int:pk>/', views.reply_message, name='reply_message'),path('about/',   views.about,   name='about'),
+    path('contact/', views.contact, name='contact'),]
