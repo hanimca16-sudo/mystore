@@ -2,10 +2,30 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>متجري</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
   <style>
+    .category-pill {
+  background: white;
+  color: #0f3460;
+  border: 2px solid #0f3460;
+  border-radius: 30px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+.category-pill:hover, .category-pill.active {
+  background: linear-gradient(135deg, #0f3460, #16213e);
+  color: #FFD700;
+  border-color: #0f3460;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
     * { font-family: 'Tajawal', sans-serif; }
     body { background: #f5f5f5; }
     .navbar { background: linear-gradient(135deg, #1a1a2e, #16213e) !important; padding: 15px 30px; }
@@ -33,6 +53,17 @@
     footer { background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; padding: 30px 0; margin-top: 50px; }
     .stats { background: white; border-radius: 15px; padding: 20px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
     .stats h3 { font-size: 32px; font-weight: 900; color: #0f3460; }
+    @media (max-width: 768px) {
+  .navbar { padding: 10px 15px; flex-wrap: wrap; gap: 8px; }
+  .navbar div { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
+  .navbar .btn { font-size: 11px; padding: 4px 8px; }
+  .hero { padding: 30px 15px; }
+  .hero h1 { font-size: 26px; }
+  .hero p { font-size: 14px; }
+  .col-md-3 { width: 50% !important; }
+  .category-pill { font-size: 12px; padding: 6px 12px; }
+  .price-tag { font-size: 15px; }
+}
   </style>
 </head>
 <body>
@@ -72,37 +103,11 @@
 </div>
 
 <div class="container">
-  <div class="row g-3 mb-4">
-    <div class="col-md-3">
-      <div class="stats">
-        <h3>{{ products.count }}+</h3>
-        <p class="text-muted mb-0">منتج متاح</p>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="stats">
-        <h3>🆓</h3>
-        <p class="text-muted mb-0">مجاني 100%</p>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="stats">
-        <h3>🚀</h3>
-        <p class="text-muted mb-0">نشر فوري</p>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="stats">
-        <h3>🔒</h3>
-        <p class="text-muted mb-0">آمن وموثوق</p>
-      </div>
-    </div>
-  </div>
 
-  <div class="mb-4">
-    <a href="/" class="btn btn-outline-secondary category-btn">الكل</a>
+  <div class="mb-4 d-flex flex-wrap gap-2 justify-content-center">
+    <a href="/" class="category-pill {% if not request.GET.category %}active{% endif %}">🛍️ الكل</a>
     {% for category in categories %}
-      <a href="?category={{ category.name }}" class="btn btn-outline-secondary category-btn">{{ category.name }}</a>
+      <a href="?category={{ category.name }}" class="category-pill {% if request.GET.category == category.name %}active{% endif %}">{{ category.name }}</a>
     {% endfor %}
   </div>
 
@@ -117,7 +122,15 @@
         {% endif %}
         <div class="card-body">
           <h6 class="card-title fw-bold">{{ product.title }}</h6>
-          <p class="text-muted small mb-1">{{ product.description|truncatewords:8 }}</p>
+<div class="d-flex align-items-center mb-1">
+  <span style="color:#FFD700; font-size:13px;">
+    {% with avg=product.reviews.all %}
+    ⭐ {{ avg|length }}
+    {% endwith %}
+  </span>
+  <span class="text-muted small ms-1">({{ product.reviews.count }} تقييم)</span>
+</div>
+<p class="text-muted small mb-1">{{ product.description|truncatewords:8 }}</p>
           <p class="text-muted small mb-2">🏪 {{ product.seller.shop_name }}</p>
           {% if product.wilaya %}
           <p class="text-muted small mb-2">📍 {{ product.wilaya }}</p>
@@ -151,6 +164,11 @@
   <div class="container">
     <p class="mb-1" style="font-size:24px;">🛍️ متجري</p>
     <p class="text-muted">منصة التسوق الجزائرية المجانية</p>
+    <div class="mt-2 mb-3">
+      <span class="badge bg-success me-2 p-2">🆓 مجاني 100%</span>
+      <span class="badge bg-primary me-2 p-2">🚀 نشر فوري</span>
+      <span class="badge bg-secondary p-2">🔒 آمن وموثوق</span>
+    </div>
     <div class="mt-2">
       <a href="/about/" class="text-muted me-3">من نحن</a>
       <a href="/contact/" class="text-muted">اتصل بنا</a>

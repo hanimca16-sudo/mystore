@@ -18,9 +18,9 @@ class Seller(models.Model):
 
 class Product(models.Model):
     SHIPPING_CHOICES = [
-        ('available',       'شحن متوفر'),
-        ('local',           'شحن جزئي'),
-        ('not_available',   'شحن غير متوفر'),
+        ('available',     'شحن متوفر'),
+        ('local',         'شحن جزئي'),
+        ('not_available', 'شحن غير متوفر'),
     ]
     seller      = models.ForeignKey(Seller, on_delete=models.CASCADE)
     title       = models.CharField(max_length=200)
@@ -37,17 +37,24 @@ class Product(models.Model):
     def __str__(self):
         return self.title
 
-
 class Order(models.Model):
     STATUS_CHOICES = [
-        ('pending', 'قيد الانتظار'),
-        ('paid',    'مدفوع'),
-        ('shipped', 'تم الشحن'),
+        ('pending',   'قيد الانتظار'),
+        ('confirmed', 'تم التأكيد'),
+        ('shipped',   'تم الشحن'),
+        ('delivered', 'تم التسليم'),
+        ('cancelled', 'ملغي'),
     ]
-    seller     = models.ForeignKey(Seller, on_delete=models.CASCADE, null=True, blank=True)
+    user       = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     status     = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     total      = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    wilaya     = models.CharField(max_length=100, blank=True)
+    commune    = models.CharField(max_length=100, blank=True)
+    phone      = models.CharField(max_length=20, blank=True)
+
+    def __str__(self):
+        return f'طلب {self.pk} - {self.user}'
 
 class OrderItem(models.Model):
     order    = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
@@ -74,3 +81,16 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+class Review(models.Model):
+    product    = models.ForeignKey(Product, related_name='reviews', on_delete=models.CASCADE)
+    user       = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating     = models.IntegerField(default=5)
+    comment    = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('product', 'user')
+
+    def __str__(self):
+        return f'{self.user} - {self.product} - {self.rating}⭐'

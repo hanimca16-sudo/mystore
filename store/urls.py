@@ -15,4 +15,4 @@ urlpatterns = [
     path('message/<int:pk>/',       views.send_message,    name='send_message'),
     path('inbox/',                  views.inbox,           name='inbox'),
     path('profile/', views.profile, name='profile'),path('reply/<int:pk>/', views.reply_message, name='reply_message'),path('about/',   views.about,   name='about'),
-    path('contact/', views.contact, name='contact'),]
+    path('contact/', views.contact, name='contact'),path('order-success/', views.order_success, name='order_success'),]

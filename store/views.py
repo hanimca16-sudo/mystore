@@ -2,7 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
-from .models import Product, Category, Order, OrderItem, Seller, Message, Profile
+from django.db import models
+from .models import Product, Category, Order, OrderItem, Seller, Message, Profile, Review
 
 def product_list(request):
     products   = Product.objects.filter(stock__gt=0)
@@ -22,7 +23,28 @@ def product_list(request):
 
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    return render(request, 'store/product_detail.html', {'product': product})
+    reviews = product.reviews.all()
+    avg_rating = reviews.aggregate(models.Avg('rating'))['rating__avg'] or 0
+    user_review = None
+    if request.user.is_authenticated:
+        user_review = reviews.filter(user=request.user).first()
+
+    if request.method == 'POST' and request.user.is_authenticated:
+        rating  = int(request.POST.get('rating', 5))
+        comment = request.POST.get('comment', '')
+        Review.objects.update_or_create(
+            product=product,
+            user=request.user,
+            defaults={'rating': rating, 'comment': comment}
+        )
+        return redirect('product_detail', pk=pk)
+
+    return render(request, 'store/product_detail.html', {
+        'product':     product,
+        'reviews':     reviews,
+        'avg_rating':  round(avg_rating, 1),
+        'user_review': user_review,
+    })
 
 def add_to_cart(request, pk):
     cart = request.session.get('cart', {})
@@ -44,16 +66,22 @@ def checkout(request):
     total    = sum(p.price * cart[str(p.pk)] for p in products)
 
     if request.method == 'POST':
-        order = Order.objects.create(user=request.user, total=total)
+        order = Order.objects.create(
+            user=request.user,
+            total=total,
+            wilaya=request.POST.get('wilaya', ''),
+            commune=request.POST.get('commune', ''),
+            phone=request.POST.get('phone', ''),
+        )
         for product in products:
             OrderItem.objects.create(
                 order=order, product=product,
                 quantity=cart[str(product.pk)], price=product.price
             )
         request.session['cart'] = {}
-        return redirect('product_list')
+        return redirect('order_success')
 
-    return render(request, 'store/checkout.html', {'total': total})
+    return render(request, 'store/checkout.html', {'total': total, 'products': products})
 
 def register(request):
     error = ''
@@ -191,3 +219,7 @@ def about(request):
 
 def contact(request):
     return render(request, 'store/contact.html')
+
+@login_required
+def order_success(request):
+    return render(request, 'store/order_success.html')
