@@ -1,42 +1,40 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <title>إضافة منتج</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+{% extends 'store/base.html' %}
 
-<nav class="navbar navbar-dark bg-dark px-4 d-flex justify-content-between">
-  <a class="navbar-brand" href="/">🛍️ متجري</a>
-  <a href="/seller/dashboard/" class="btn btn-outline-light btn-sm">لوحة التحكم</a>
-</nav>
+{% block title %}إضافة منتج{% endblock %}
 
+{% block extra_style %}
+.add-card { background: white; border: none; border-radius: 20px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
+.form-control, .form-select { border-radius: 12px; padding: 12px; border: 2px solid #eee; font-size: 15px; }
+.form-control:focus, .form-select:focus { border-color: #0f3460; box-shadow: none; }
+.btn-publish { background: linear-gradient(135deg, #FFD700, #FFC200); color: #1a1a2e; border: none; border-radius: 12px; padding: 14px 0; width: 100%; font-size: 18px; font-weight: 900; }
+{% endblock %}
+
+{% block content %}
 <div class="container mt-4">
   <div class="row justify-content-center">
     <div class="col-md-7">
-      <div class="card p-4">
-        <h3 class="mb-4">➕ إضافة منتج جديد</h3>
+      <div class="add-card">
+        <h3 class="fw-bold mb-4">➕ إضافة منتج جديد</h3>
         <form method="POST" enctype="multipart/form-data">
           {% csrf_token %}
           <div class="mb-3">
-            <label class="form-label">اسم المنتج</label>
+            <label class="form-label fw-bold">اسم المنتج</label>
             <input type="text" name="title" class="form-control" required>
           </div>
           <div class="mb-3">
-            <label class="form-label">وصف المنتج</label>
+            <label class="form-label fw-bold">وصف المنتج</label>
             <textarea name="description" class="form-control" rows="3" required></textarea>
           </div>
           <div class="mb-3">
-            <label class="form-label">السعر DA</label>
+            <label class="form-label fw-bold">السعر DA</label>
             <input type="number" name="price" step="0.01" class="form-control" required>
           </div>
           <div class="mb-3">
-            <label class="form-label">الكمية في المخزون</label>
+            <label class="form-label fw-bold">الكمية في المخزون</label>
             <input type="number" name="stock" class="form-control" required>
           </div>
           <div class="mb-3">
-            <label class="form-label">الفئة</label>
+            <label class="form-label fw-bold">الفئة</label>
             <select name="category" class="form-control" required>
               {% for category in categories %}
               <option value="{{ category.pk }}">{{ category.name }}</option>
@@ -44,36 +42,34 @@
             </select>
           </div>
           <div class="mb-3">
-            <label class="form-label">الشحن</label>
+            <label class="form-label fw-bold">الشحن</label>
             <select name="shipping" class="form-control">
               <option value="">-- اختر --</option>
-              <option value="available">شحن متوفر</option>
-              <option value="local">شحن جزئي</option>
-              <option value="not_available">شحن غير متوفر</option>
+              <option value="available">✅ شحن متوفر</option>
+              <option value="local">📦 شحن جزئي</option>
+              <option value="not_available">❌ شحن غير متوفر</option>
             </select>
           </div>
           <div class="mb-3">
-            <label class="form-label">الولاية</label>
-            <input type="text" name="wilaya" class="form-control" placeholder="اختياري">
+            <label class="form-label fw-bold">الولاية <span class="text-muted fw-normal">(اختياري)</span></label>
+            <input type="text" name="wilaya" class="form-control" placeholder="مثال: الجزائر">
           </div>
           <div class="mb-3">
-            <label class="form-label">رقم الهاتف</label>
-            <input type="text" name="phone" class="form-control" placeholder="اختياري">
+            <label class="form-label fw-bold">رقم الهاتف <span class="text-muted fw-normal">(اختياري)</span></label>
+            <input type="text" name="phone" class="form-control" placeholder="مثال: 0555000000">
           </div>
           <div class="mb-3">
-            <label class="form-label">الموقع الإلكتروني</label>
-            <input type="url" name="website" class="form-control" placeholder="اختياري">
+            <label class="form-label fw-bold">الموقع الإلكتروني <span class="text-muted fw-normal">(اختياري)</span></label>
+            <input type="url" name="website" class="form-control" placeholder="https://...">
           </div>
           <div class="mb-3">
-            <label class="form-label">صورة المنتج</label>
+            <label class="form-label fw-bold">صورة المنتج <span class="text-muted fw-normal">(اختياري)</span></label>
             <input type="file" name="image" class="form-control">
           </div>
-          <button type="submit" class="btn btn-success w-100">نشر المنتج 🚀</button>
+          <button type="submit" class="btn btn-publish">نشر المنتج 🚀</button>
         </form>
       </div>
     </div>
   </div>
 </div>
-
-</body>
-</html>
+{% endblock %}

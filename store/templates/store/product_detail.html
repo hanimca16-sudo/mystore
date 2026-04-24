@@ -1,43 +1,25 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <title>{{ product.title }}</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <style>
-    * { font-family: 'Tajawal', sans-serif; }
-    body { background: #f5f5f5; }
-    .navbar { background: linear-gradient(135deg, #1a1a2e, #16213e) !important; padding: 15px 30px; }
-    .navbar-brand { font-size: 24px; font-weight: 900; color: #FFD700 !important; }
-    .product-img { border-radius: 20px; width: 100%; object-fit: cover; max-height: 400px; }
-    .product-card { background: white; border: none; border-radius: 20px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
-    .price-tag { font-size: 32px; font-weight: 900; color: #0f3460; }
-    .btn-cart { background: linear-gradient(135deg, #FFD700, #FFC200); color: #1a1a2e; border: none; border-radius: 12px; padding: 12px 0; width: 100%; font-size: 16px; font-weight: 900; }
-    .btn-cart:hover { background: linear-gradient(135deg, #0f3460, #16213e); color: white; }
-    .btn-back { background: white; color: #0f3460; border: 2px solid #0f3460; border-radius: 12px; padding: 12px 0; width: 100%; font-size: 16px; font-weight: 700; }
-    .seller-info { background: #f0f4ff; border-radius: 15px; padding: 15px; margin-top: 15px; }
-    .message-box { background: white; border: none; border-radius: 20px; padding: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); margin-top: 20px; }
-    .message-input { border-radius: 12px; padding: 12px; border: 2px solid #eee; font-size: 15px; }
-    .message-input:focus { border-color: #0f3460; box-shadow: none; }
-    .btn-send { background: linear-gradient(135deg, #0f3460, #16213e); color: white; border: none; border-radius: 12px; padding: 12px 0; width: 100%; font-size: 16px; font-weight: 700; }
-    .stars { color: #FFD700; font-size: 20px; }
-    .review-card { background: #f9f9f9; border-radius: 12px; padding: 15px; margin-bottom: 10px; }
-    .star-select { font-size: 30px; cursor: pointer; }
-    .star-select input { display: none; }
-    .star-select label { color: #ddd; cursor: pointer; }
-    .star-select input:checked ~ label,
-    .star-select label:hover,
-    .star-select label:hover ~ label { color: #FFD700; }
-  </style>
-</head>
-<body>
+{% extends 'store/base.html' %}
 
-<nav class="navbar navbar-dark px-4 d-flex justify-content-between">
-  <a class="navbar-brand" href="/">🛍️ متجري</a>
-  <a href="/cart/" class="btn btn-outline-warning btn-sm">🛒 السلة</a>
-</nav>
+{% block title %}{{ product.title }}{% endblock %}
 
+{% block extra_style %}
+.product-img { border-radius: 20px; width: 100%; object-fit: cover; max-height: 400px; }
+.product-card { background: white; border: none; border-radius: 20px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
+.price-tag { font-size: 32px; font-weight: 900; color: #0f3460; }
+.btn-cart { background: linear-gradient(135deg, #FFD700, #FFC200); color: #1a1a2e; border: none; border-radius: 12px; padding: 12px 0; width: 100%; font-size: 16px; font-weight: 900; }
+.btn-cart:hover { background: linear-gradient(135deg, #0f3460, #16213e); color: white; }
+.btn-back { background: white; color: #0f3460; border: 2px solid #0f3460; border-radius: 12px; padding: 12px 0; width: 100%; font-size: 16px; font-weight: 700; }
+.seller-info { background: #f0f4ff; border-radius: 15px; padding: 15px; margin-top: 15px; }
+.message-box { background: white; border: none; border-radius: 20px; padding: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); margin-top: 20px; }
+.message-input { border-radius: 12px; padding: 12px; border: 2px solid #eee; font-size: 15px; }
+.message-input:focus { border-color: #0f3460; box-shadow: none; }
+.btn-send { background: linear-gradient(135deg, #0f3460, #16213e); color: white; border: none; border-radius: 12px; padding: 12px 0; width: 100%; font-size: 16px; font-weight: 700; }
+.btn-send:hover { background: linear-gradient(135deg, #FFD700, #FFC200); color: #1a1a2e; }
+.stars { color: #FFD700; font-size: 20px; }
+.review-card { background: #f9f9f9; border-radius: 12px; padding: 15px; margin-bottom: 10px; }
+{% endblock %}
+
+{% block content %}
 <div class="container mt-4">
   <div class="row g-4">
     <div class="col-md-5">
@@ -106,7 +88,6 @@
         <form method="POST">
           {% csrf_token %}
           <div class="mb-3">
-            <label class="form-label">التقييم</label>
             <select name="rating" class="form-control">
               <option value="5">⭐⭐⭐⭐⭐ ممتاز</option>
               <option value="4">⭐⭐⭐⭐ جيد جداً</option>
@@ -151,6 +132,4 @@
     </div>
   </div>
 </div>
-
-</body>
-</html>
+{% endblock %}

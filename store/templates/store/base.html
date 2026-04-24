@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}متجري{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Tajawal', sans-serif; }
+    body { background: #f5f5f5; }
+    .navbar { background: linear-gradient(135deg, #1a1a2e, #16213e) !important; padding: 15px 30px; }
+    .navbar-brand { font-size: 24px; font-weight: 900; color: #FFD700 !important; }
+    footer { background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; padding: 30px 0; margin-top: 50px; }
+    @media (max-width: 768px) {
+      .navbar { padding: 10px 15px; flex-wrap: wrap; gap: 8px; }
+      .navbar div { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
+      .navbar .btn { font-size: 11px; padding: 4px 8px; }
+    }
+    {% block extra_style %}{% endblock %}
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark px-4 d-flex justify-content-between">
+  <a class="navbar-brand" href="/">🛍️ متجري</a>
+  <div>
+    {% if user.is_authenticated %}
+      {% if user.seller %}
+        <a href="/seller/dashboard/" class="btn btn-warning btn-sm me-2">🏪 بيع منتج</a>
+        <a href="/inbox/" class="btn btn-info btn-sm me-2">📬 الرسائل</a>
+        <a href="/profile/" class="btn btn-secondary btn-sm me-2">👤 حسابي</a>
+      {% endif %}
+      <form method="POST" action="/accounts/logout/" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-light btn-sm me-2">خروج</button>
+      </form>
+    {% else %}
+      <a href="/register/" class="btn btn-warning btn-sm me-2">إنشاء حساب</a>
+      <a href="/accounts/login/" class="btn btn-outline-light btn-sm me-2">دخول</a>
+    {% endif %}
+    <a href="/about/" class="btn btn-outline-light btn-sm me-2">من نحن</a>
+    <a href="/contact/" class="btn btn-outline-light btn-sm me-2">اتصل بنا</a>
+    <a href="/cart/" class="btn btn-outline-warning btn-sm">🛒 السلة</a>
+  </div>
+</nav>
+
+{% block content %}{% endblock %}
+
+<footer class="text-center">
+  <div class="container py-4">
+    <p class="mb-1" style="font-size:24px;">🛍️ متجري</p>
+    <p class="text-muted">منصة التسوق الجزائرية المجانية</p>
+    <div class="mt-2 mb-3">
+      <span class="badge bg-success me-2 p-2">🆓 مجاني 100%</span>
+      <span class="badge bg-primary me-2 p-2">🚀 نشر فوري</span>
+      <span class="badge bg-secondary p-2">🔒 آمن وموثوق</span>
+    </div>
+    <div class="mt-2">
+      <a href="/about/" class="text-muted me-3">من نحن</a>
+      <a href="/contact/" class="text-muted">اتصل بنا</a>
+    </div>
+    <p class="text-muted mt-3 mb-0">© 2026 متجري - جميع الحقوق محفوظة</p>
+  </div>
+</footer>
+
+</body>
+</html>
