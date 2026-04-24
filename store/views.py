@@ -84,6 +84,8 @@ def checkout(request):
     return render(request, 'store/checkout.html', {'total': total, 'products': products})
 
 def register(request):
+    if request.user.is_authenticated:
+        return redirect('product_list')
     error = ''
     if request.method == 'POST':
         username = request.POST['username']
@@ -165,8 +167,8 @@ def send_message(request, pk):
 
 @login_required
 def inbox(request):
-    messages = Message.objects.filter(receiver=request.user).order_by('-created_at')
-    return render(request, 'store/inbox.html', {'messages': messages})
+    inbox_messages = Message.objects.filter(receiver=request.user).order_by('-created_at')
+    return render(request, 'store/inbox.html', {'inbox_messages': inbox_messages})
 
 @login_required
 def reply_message(request, pk):
